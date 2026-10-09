@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рабочий лист по физике. Измерение физических величин</title>
+<style>
+/* ============================================================
+   ТЕМА ОФОРМЛЕНИЯ
+   ============================================================ */
+:root{
+  --bg:#eef7fd;
+  --card:#ffffff;
+  --ink:#12354b;
+  --muted:#5a7d92;
+  --accent:#2b8cc4;
+  --accent-dark:#1c6a99;
+  --accent-soft:#e2f1fb;
+  --line:#bfe0f3;
+  --ok:#1f9d55;
+  --err:#d64545;
+  --radius:16px;
+  --shadow:0 6px 20px rgba(27,90,130,.10);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  padding:18px 12px 70px;
+  font-family:"Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif;
+  color:var(--ink);
+  line-height:1.55;
+  background:
+    radial-gradient(1200px 600px at 8% -10%, #ddf0fb 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, #e6f4ff 0%, transparent 55%),
+    var(--bg);
+  background-attachment:fixed;
+}
+
+.page{max-width:1020px;margin:0 auto}
+
+/* ---------- Шапка ---------- */
+.sheet-head{
+  position:relative;
+  background:linear-gradient(135deg,#ffffff 0%,#e7f4fd 100%);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:22px 24px 24px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.sheet-head::after{
+  content:"";
+  position:absolute;right:-60px;top:-60px;width:200px;height:200px;
+  background:radial-gradient(circle,#cfe9f9 0%,transparent 70%);
+  border-radius:50%;
+}
+.icon-strip{
+  display:flex;gap:14px;flex-wrap:wrap;
+  color:var(--accent);opacity:.85;margin-bottom:8px;
+}
+.icon-strip svg{display:block}
+.sheet-head h1{
+  margin:0 0 4px;font-size:clamp(19px,3.2vw,27px);line-height:1.25;
+  color:var(--accent-dark);letter-spacing:.2px;
+}
+.sheet-head .subtitle{
+  margin:0;font-size:clamp(14px,2.2vw,16px);color:var(--muted);font-weight:600;
+}
+
+.id-fields{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;margin-top:18px;position:relative;z-index:1;
+}
+.id-fields label{
+  display:flex;flex-direction:column;gap:5px;
+  font-size:12.5px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.id-fields input{
+  padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;
+  font-size:15px;background:#fff;color:var(--ink);font-family:inherit;
+}
+.id-fields input:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(43,140,196,.15);
+}
+
+/* ---------- Блок задания ---------- */
+.task{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px 22px 22px;
+  margin-bottom:20px;
+}
+.task-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.task-num{
+  flex:0 0 auto;width:36px;height:36px;border-radius:12px;
+  display:grid;place-items:center;font-weight:800;font-size:17px;
+  background:linear-gradient(160deg,#4aa8dc,#2b7cb8);color:#fff;
+  box-shadow:0 4px 10px rgba(43,124,184,.3);
+}
+.task-icon{color:var(--accent);display:flex;align-items:center}
+.task-head h2{
+  margin:0;font-size:clamp(15px,2.4vw,18px);color:var(--accent-dark);font-weight:700;
+}
+
+/* ---------- Мини-карточки приборов ---------- */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid-2{grid-template-columns:1fr}}
+
+.card-mini{
+  background:linear-gradient(180deg,#fbfdff,#f2f9fe);
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px 16px;
+}
+.card-mini h3{
+  margin:0 0 10px;font-size:14.5px;color:var(--accent-dark);
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.figure{display:flex;justify-content:center;margin-bottom:12px}
+.figure svg{max-width:100%;height:auto}
+
+/* ---------- Поля ввода ---------- */
+.field-row{margin-bottom:8px}
+.field-row > label{
+  display:block;font-size:13.5px;font-weight:600;color:var(--muted);margin-bottom:4px;
+}
+.input-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.unit{font-size:14px;font-weight:700;color:var(--muted)}
+
+.num-input, .text-input{
+  width:100%;max-width:170px;
+  padding:9px 11px;
+  border:1.5px solid var(--line);border-radius:10px;
+  font-size:15px;font-family:inherit;background:#fbfdff;color:var(--ink);
+  transition:border-color .15s, box-shadow .15s, background .15s;
+}
+.num-input:focus,.text-input:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(43,140,196,.15);
+}
+.num-input.good{border-color:var(--ok);background:#f1fbf5}
+.num-input.bad{border-color:var(--err);background:#fdf3f3}
+
+.msg{display:block;font-size:12.5px;margin-top:4px;min-height:16px;color:var(--muted)}
+.msg.ok{color:var(--ok);font-weight:600}
+.msg.err{color:var(--err);font-weight:600}
+
+/* ---------- Таблицы ---------- */
+.table-wrap{overflow-x:auto;margin:6px 0 12px;border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{
+  border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:middle;
+}
+th{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;font-size:13.5px}
+tbody tr:nth-child(even){background:#f9fcfe}
+
+/* ---------- Кнопки ---------- */
+.btn{
+  border:none;border-radius:12px;padding:10px 20px;
+  font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+  background:linear-gradient(180deg,#3d9fd6,#2b7cb8);
+  color:#fff;box-shadow:0 4px 12px rgba(43,124,184,.28);
+  transition:transform .1s, box-shadow .15s, opacity .15s;
+}
+.btn:hover{box-shadow:0 6px 16px rgba(43,124,184,.38)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{
+  opacity:.5;cursor:not-allowed;box-shadow:none;
+  background:linear-gradient(180deg,#a9c8db,#8bb2cb);
+}
+.btn.small{padding:7px 14px;font-size:13.5px;border-radius:10px}
+.btn.secondary{
+  background:#fff;color:var(--accent-dark);border:1.5px solid var(--line);
+  box-shadow:none;
+}
+.btn.secondary:hover{background:var(--accent-soft)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+
+.task-result{
+  margin:12px 0 0;font-size:14px;font-weight:700;color:var(--accent-dark);min-height:20px;
+}
+.task-result.ok{color:var(--ok)}
+.task-result.err{color:var(--err)}
+
+/* ---------- Чекбоксы ---------- */
+.check-row{
+  display:flex;gap:11px;align-items:flex-start;
+  padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;
+  margin-bottom:9px;cursor:pointer;background:#fbfdff;
+  transition:background .15s,border-color .15s;
+}
+.check-row:hover{background:var(--accent-soft)}
+.check-row input{
+  width:19px;height:19px;margin-top:2px;accent-color:var(--accent);flex:0 0 auto;cursor:pointer;
+}
+.check-content{flex:1}
+.check-content > span{font-size:14.5px}
+.t5-hint{display:block;font-size:12.5px;margin-top:4px;font-weight:600;min-height:0}
+
+/* ---------- Рефлексия ---------- */
+.reflect textarea{
+  width:100%;min-height:88px;resize:vertical;
+  padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;
+  font-family:inherit;font-size:14.5px;color:var(--ink);background:#fbfdff;
+}
+.reflect textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,140,196,.15)}
+.reflect select{
+  padding:9px 12px;border:1.5px solid var(--line);border-radius:11px;
+  font-family:inherit;font-size:15px;background:#fbfdff;color:var(--ink);
+}
+
+/* ---------- Информация о попытках ---------- */
+.attempt-info{
+  padding:11px 14px;border-radius:12px;
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  font-size:14px;color:var(--accent-dark);margin-bottom:14px;
+}
+.attempt-info.err{
+  background:#fdf3f3;border-color:var(--err);color:var(--err);
+}
+
+/* ---------- Итоговый блок ---------- */
+.final-box{
+  background:linear-gradient(140deg,#ffffff,#eaf6fe);
+  border:2px solid var(--accent);border-radius:20px;
+  padding:22px 24px;box-shadow:0 10px 26px rgba(43,124,184,.18);
+}
+.final-score{
+  display:flex;gap:20px;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;margin-bottom:8px;
+}
+.score-num{font-size:34px;font-weight:800;color:var(--accent-dark);line-height:1}
+.score-num span{font-size:16px;font-weight:600;color:var(--muted)}
+.score-mark{font-size:19px;font-weight:700;color:var(--accent-dark)}
+.score-mark b{
+  display:inline-grid;place-items:center;width:38px;height:38px;margin-left:6px;
+  border-radius:50%;background:linear-gradient(160deg,#4aa8dc,#2b7cb8);color:#fff;
+}
+.feedback{font-size:15px;font-weight:600;margin:6px 0 14px}
+.breakdown{list-style:none;padding:0;margin:0;font-size:14px}
+.breakdown li{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:6px 0;border-bottom:1px dashed var(--line);
+}
+.breakdown li:last-child{border-bottom:none}
+.breakdown span:last-child{color:var(--muted);font-weight:600;white-space:nowrap}
+
+.reveal-note{
+  margin-top:16px;padding:10px 14px;border-radius:12px;
+  background:#e8f8ef;border:1px solid var(--ok);color:#166a3c;
+  font-size:13.5px;font-weight:600;
+}
+
+.hidden{display:none}
+.footer-note{
+  font-size:12.5px;color:var(--muted);text-align:center;margin-top:22px;
+  display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.link-btn{
+  background:none;border:none;color:var(--muted);
+  text-decoration:underline;cursor:pointer;font-size:12.5px;padding:2px;
+}
+.link-btn:hover{color:var(--accent-dark)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= ШАПКА ================= -->
+  <header class="sheet-head">
+    <div class="icon-strip" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none"/>
+        <ellipse cx="12" cy="12" rx="10" ry="4.3"/>
+        <ellipse cx="12" cy="12" rx="10" ry="4.3" transform="rotate(60 12 12)"/>
+        <ellipse cx="12" cy="12" rx="10" ry="4.3" transform="rotate(120 12 12)"/>
+      </svg>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="12" cy="13.5" r="7.6"/>
+        <path d="M12 13.5V9.2M12 13.5l3 1.8"/>
+        <path d="M9.4 2.4h5.2M12 2.4v3.3"/>
+      </svg>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+        <path d="M12 3.5 21 20H3z"/>
+        <path d="M8 15.5h2.6v3"/>
+      </svg>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M9.2 3h5.6"/>
+        <path d="M10.2 3v5.6L4.9 18.4A1.9 1.9 0 0 0 6.6 21.3h10.8a1.9 1.9 0 0 0 1.7-2.9L13.8 8.6V3"/>
+        <path d="M7.3 15h9.4"/>
+      </svg>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M6 5v8a6 6 0 0 0 12 0V5"/>
+        <path d="M6 9.6h3.4M18 9.6h-3.4"/>
+      </svg>
+    </div>
+
+    <h1>Рабочий лист по физике. Измерение физических величин. Точность и погрешность измерений</h1>
+    <p class="subtitle">Определяем цену деления, снимаем показания, считаем погрешности</p>
+
+    <div class="id-fields">
+      <label>Фамилия, имя
+        <input type="text" id="studentName" placeholder="Иванов Иван">
+      </label>
+      <label>Курс
+        <input type="text" id="studentCourse" placeholder="например, группа 1">
+      </label>
+      <label>Дата
+        <input type="date" id="studentDate">
+      </label>
+    </div>
+  </header>
+
+  <!-- ================= ЗАДАНИЕ 1 ================= -->
+  <section class="task" id="task1">
+    <div class="task-head">
+      <span class="task-num">1</span>
+      <span class="task-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4.3"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4.3" transform="rotate(60 12 12)"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4.3" transform="rotate(120 12 12)"/>
+        </svg>
+      </span>
+      <h2>Определите цену деления и показание прибора</h2>
+    </div>
+
+    <div class="grid-2">
+      <div class="card-mini">
+        <h3>Линейка</h3>
+        <div class="figure" id="fig-ruler"></div>
+
+        <div class="field-row">
+          <label>Цена деления</label>
+          <div class="input-wrap">
+            <input type="text" inputmode="decimal" class="num-input"
+                   data-key="t1_ruler_div" id="t1_ruler_div" placeholder="например, 0,5">
+            <span class="unit">см</span>
+          </div>
+          <span class="msg" data-for="t1_ruler_div"></span>
+        </div>
+
+        <div class="field-row">
+          <label>Показание</label>
+          <div class="input-wrap">
+            <input type="text" inputmode="decimal" class="num-input"
+                   data-key="t1_ruler_read" id="t1_ruler_read" placeholder="например, 2,5">
+            <span class="unit">см</span>
+          </div>
+          <span class="msg" data-for="t1_ruler_read"></span>
+        </div>
+      </div>
+
+      <div class="card-mini">
+        <h3>Амперметр</h3>
+        <div class="figure" id="fig-ammeter"></div>
+
+        <div class="field-row">
+          <label>Цена деления</label>
+          <div class="input-wrap">
+            <input type="text" inputmode="decimal" class="num-input"
+                   data-key="t1_amm_div" id="t1_amm_div" placeholder="например, 0,5">
+            <span class="unit">А</span>
+          </div>
+          <span class="msg" data-for="t1_amm_div"></span>
+        </div>
+
+        <div class="field-row">
+          <label>Показание</label>
+          <div class="input-wrap">
+            <input type="text" inputmode="decimal" class="num-input"
+                   data-key="t1_amm_read" id="t1_amm_read" placeholder="например, 2,5">
+            <span class="unit">А</span>
+          </div>
+          <span class="msg" data-for="t1_amm_read"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="check-task1">Проверить</button>
+    </div>
+    <p class="task-result" id="result-task1"></p>
+  </section>
+
+  <!-- ================= ЗАДАНИЕ 2 ================= -->
+  <section class="task" id="task2">
+    <div class="task-head">
+      <span class="task-num">2</span>
+      <span class="task-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+          <path d="M12 3.5 21 20H3z"/>
+          <path d="M8 15.5h2.6v3"/>
+        </svg>
+      </span>
+      <h2>Вычислите абсолютную и относительную погрешность измерений. Заполните таблицу</h2>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin:0 0 10px">
+      Относительная погрешность: <b>ε = Δx / x · 100 %</b>. Ответ впишите в процентах (можно и долей — оба варианта зачтутся).
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Измеряемая величина</th>
+            <th>Измеренное значение x</th>
+            <th>Абсолютная погрешность Δx</th>
+            <th>Относительная погрешность ε</th>
+          </tr>
+        </thead>
+        <tbody id="t2-body"></tbody>
+      </table>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="check-task2">Проверить</button>
+    </div>
+    <p class="task-result" id="result-task2"></p>
+  </section>
+
+  <!-- ================= ЗАДАНИЕ 3 ================= -->
+  <section class="task" id="task3">
+    <div class="task-head">
+      <span class="task-num">3</span>
+      <span class="task-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="12" cy="13.5" r="7.6"/>
+          <path d="M12 13.5V9.2M12 13.5l3 1.8"/>
+          <path d="M9.4 2.4h5.2M12 2.4v3.3"/>
+        </svg>
+      </span>
+      <h2>Сантиметровой лентой измерили длину бруска несколько раз</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Номер измерения</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+        </thead>
+        <tbody id="t3-body"></tbody>
+      </table>
+    </div>
+
+    <div class="field-row">
+      <label>1. Чему равно среднее значение длины бруска?</label>
+      <div class="input-wrap">
+        <span class="unit">L<sub>ср</sub> =</span>
+        <input type="text" inputmode="decimal" class="num-input" data-key="t3_mean" id="t3_mean">
+        <span class="unit">см</span>
+        <button class="btn small secondary" data-calc="t3_mean">Рассчитать</button>
+      </div>
+      <span class="msg" data-for="t3_mean"></span>
+    </div>
+
+    <div class="field-row">
+      <label>2. Найдите абсолютную погрешность измерений (как половину размаха измерений)</label>
+      <div class="input-wrap">
+        <span class="unit">ΔL =</span>
+        <input type="text" inputmode="decimal" class="num-input" data-key="t3_err" id="t3_err">
+        <span class="unit">см</span>
+        <button class="btn small secondary" data-calc="t3_err">Рассчитать</button>
+      </div>
+      <span class="msg" data-for="t3_err"></span>
+    </div>
+
+    <div class="field-row">
+      <label>3. Запишите результат измерения с учётом погрешности</label>
+      <div class="input-wrap">
+        <span class="unit">L = (</span>
+        <input type="text" inputmode="decimal" class="num-input" style="max-width:110px"
+               data-key="t3_res_val" id="t3_res_val">
+        <span class="unit">±</span>
+        <input type="text" inputmode="decimal" class="num-input" style="max-width:110px"
+               data-key="t3_res_err" id="t3_res_err">
+        <span class="unit">) см</span>
+        <button class="btn small secondary" data-calc="t3_result">Рассчитать</button>
+      </div>
+      <span class="msg" data-for="t3_res_val"></span>
+      <span class="msg" data-for="t3_res_err"></span>
+    </div>
+
+    <p class="task-result" id="result-task3"></p>
+  </section>
+
+  <!-- ================= ЗАДАНИЕ 4 ================= -->
+  <section class="task" id="task4">
+    <div class="task-head">
+      <span class="task-num">4</span>
+      <span class="task-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M9.2 3h5.6"/>
+          <path d="M10.2 3v5.6L4.9 18.4A1.9 1.9 0 0 0 6.6 21.3h10.8a1.9 1.9 0 0 0 1.7-2.9L13.8 8.6V3"/>
+          <path d="M7.3 15h9.4"/>
+        </svg>
+      </span>
+      <h2>Запишите результат измерения с учётом погрешности</h2>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin:0 0 12px">
+      Для стрелочных приборов погрешность равна половине цены деления, для цифровых — единице
+      последнего разряда. Результат записывайте в виде <b>x = (значение ± погрешность)</b>.
+    </p>
+
+    <div id="t4-devices"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="check-task4">Проверить</button>
+    </div>
+    <p class="task-result" id="result-task4"></p>
+  </section>
+
+  <!-- ================= ЗАДАНИЕ 5 ================= -->
+  <section class="task" id="task5">
+    <div class="task-head">
+      <span class="task-num">5</span>
+      <span class="task-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M6 5v8a6 6 0 0 0 12 0V5"/>
+          <path d="M6 9.6h3.4M18 9.6h-3.4"/>
+        </svg>
+      </span>
+      <h2>Выберите верные утверждения</h2>
+    </div>
+
+    <div id="t5-list"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="check-task5">Проверить</button>
+    </div>
+    <p class="task-result" id="result-task5"></p>
+  </section>
+
+  <!-- ================= РЕФЛЕКСИЯ ================= -->
+  <section class="task reflect" id="reflection">
+    <div class="task-head">
+      <span class="task-num">★</span>
+      <h2>Рефлексия</h2>
+    </div>
+
+    <div class="field-row">
+      <label>Что на уроке было для вас самым трудным?</label>
+      <textarea id="reflectText" placeholder="Напишите свой ответ..."></textarea>
+    </div>
+
+    <div class="field-row">
+      <label>Моя оценка за работу</label>
+      <select id="selfMark">
+        <option value="">— выберите —</option>
+        <option value="5">5 — отлично</option>
+        <option value="4">4 — хорошо</option>
+        <option value="3">3 — удовлетворительно</option>
+        <option value="2">2 — надо повторить</option>
+        <option value="1">1 — не разобрался</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ================= ИТОГИ ================= -->
+  <section class="task" id="summary">
+    <div class="task-head">
+      <span class="task-num">✓</span>
+      <h2>Итоги работы</h2>
+    </div>
+
+    <div class="attempt-info" id="attemptInfo"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="finishBtn">Завершить и оценить</button>
+      <button class="btn secondary" id="resetBtn">Сбросить всё</button>
+    </div>
+
+    <div id="finalResult" class="final-box hidden" style="margin-top:18px"></div>
+  </section>
+
+  <p class="footer-note">
+    <span>Рабочий лист • Физика • Измерение физических величин</span>
+    <button class="link-btn" id="teacherReset" type="button">Сбросить счётчик попыток (для учителя)</button>
+  </p>
+</div>
+
+<script>
+/* ============================================================
+   1. КОНФИГУРАЦИЯ — УЧИТЕЛЬ МЕНЯЕТ ДАННЫЕ ЗДЕСЬ
+   ============================================================ */
+const CONFIG = {
+
+  task1: {
+    ruler: {
+      maxCm: 5,
+      divisionsPerCm: 10,
+      readingCm: 3.4
+    },
+    ammeter: {
+      max: 3,
+      subdivisionsPerUnit: 10,
+      reading: 1.8
+    }
+  },
+
+  task2: {
+    rows: [
+      { name:'Длина бруска',   symbol:'l', value:20,  unit:'см', absErr:0.5 },
+      { name:'Масса тела',     symbol:'m', value:250, unit:'г',  absErr:5   },
+      { name:'Объём жидкости', symbol:'V', value:40,  unit:'мл', absErr:2   }
+    ]
+  },
+
+  task3: {
+    unit: 'см',
+    measurements: [12.4, 12.5, 12.3, 12.6, 12.2]
+  },
+
+  task4: {
+    devices: [
+      { id:'mensura', title:'Мензурка',  unit:'мл', division:5,   error:2.5, reading:60    },
+      { id:'thermo',  title:'Термометр', unit:'°C', division:1,   error:0.5, reading:24    },
+      { id:'scales',  title:'Весы',      unit:'г',  division:0.1, error:0.1, reading:250.2 }
+    ]
+  },
+
+  task5: {
+    statements: [
+      { text:'Погрешность измерения — это отклонение измеренного значения от истинного значения величины.', correct:true },
+      { text:'Чем больше цена деления прибора, тем точнее получается измерение.', correct:false },
+      { text:'Результат измерения записывают в виде x = x<sub>изм</sub> ± Δx.', correct:true },
+      { text:'Абсолютная погрешность выражается в тех же единицах, что и сама измеряемая величина.', correct:true }
+    ]
+  },
+
+  maxPoints: { t1:4, t2:3, t3:3, t4:6, t5:4 },
+
+  /* Максимум попыток на одного пользователя */
+  maxAttempts: 2
+};
+
+/* ============================================================
+   2. УТИЛИТЫ
+   ============================================================ */
+function parseNum(raw){
+  if (raw === null || raw === undefined) return NaN;
+  const s = String(raw).trim().replace(/\s+/g,'').replace(',', '.');
+  if (s === '') return NaN;
+  if (!/^[+-]?(\d+(\.\d+)?|\.\d+)$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+
+function nearly(a, b, tol){ return Math.abs(a - b) <= tol; }
+
+function setMsg(el, text, type){
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'msg' + (type ? ' ' + type : '');
+}
+
+function round(v, n){
+  const k = Math.pow(10, n);
+  return Math.round(v * k) / k;
+}
+
+/* ============================================================
+   3. ХРАНИЛИЩЕ ПОПЫТОК
+   ============================================================ */
+const ATTEMPT_KEY = 'physics_ws_attempts_v1';
+const SCORE_KEY   = 'physics_ws_lastscore_v1';
+
+function storageGet(k){
+  try { return localStorage.getItem(k); } catch(e){ return null; }
+}
+function storageSet(k, v){
+  try { localStorage.setItem(k, v); } catch(e){}
+}
+function storageRemove(k){
+  try { localStorage.removeItem(k); } catch(e){}
+}
+
+function getAttempts(){
+  const v = storageGet(ATTEMPT_KEY);
+  return v ? parseInt(v, 10) || 0 : 0;
+}
+function setAttempts(n){
+  storageSet(ATTEMPT_KEY, String(n));
+}
+function getLastScore(){
+  const v = storageGet(SCORE_KEY);
+  return v !== null && v !== '' ? parseFloat(v) : null;
+}
+
+/** Блокировка кнопки «Завершить», если попытки исчерпаны */
+function updateAttemptInfo(){
+  const used = getAttempts();
+  const left = Math.max(0, CONFIG.maxAttempts - used);
+  const el   = document.getElementById('attemptInfo');
+  const btn  = document.getElementById('finishBtn');
+
+  if (used >= CONFIG.maxAttempts){
+    el.innerHTML = `Все попытки исчерпаны (<b>${used} из ${CONFIG.maxAttempts}</b>). ` +
+                   `Работа завершена.`;
+    el.classList.add('err');
+    btn.disabled = true;
+    btn.textContent = 'Попытки исчерпаны';
+  } else {
+    el.innerHTML = `Использовано попыток: <b>${used} из ${CONFIG.maxAttempts}</b>. ` +
+                   `Осталось: <b>${left}</b>.`;
+    el.classList.remove('err');
+    btn.disabled = false;
+    btn.textContent = 'Завершить и оценить';
+  }
+}
+
+/* ============================================================
+   4. ОТРИСОВКА ПРИБОРОВ (SVG)
+   ============================================================ */
+
+function renderRuler(cfg){
+  const pxPerCm = 90;
+  const padL = 26, padT = 58, bodyH = 54;
+  const w = cfg.maxCm * pxPerCm + padL * 2;
+  const h = padT + bodyH + 22;
+  const step = pxPerCm / cfg.divisionsPerCm;
+  const total = cfg.maxCm * cfg.divisionsPerCm;
+
+  let ticks = '';
+  for (let i = 0; i <= total; i++){
+    const x = padL + i * step;
+    const isMajor = i % cfg.divisionsPerCm === 0;
+    const isMid   = i % (cfg.divisionsPerCm / 2) === 0;
+    const len = isMajor ? 30 : (isMid ? 20 : 13);
+    ticks += `<line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${padT+len}"
+              stroke="#6b5a25" stroke-width="${isMajor ? 1.7 : 1}"/>`;
+    if (isMajor){
+      ticks += `<text x="${x.toFixed(1)}" y="${padT+bodyH-8}" text-anchor="middle"
+                font-size="13" font-weight="600" fill="#6b5a25">${i / cfg.divisionsPerCm}</text>`;
+    }
+  }
+
+  const objEnd = padL + cfg.readingCm * pxPerCm;
+
+  return `
+  <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Линейка от 0 до ${cfg.maxCm} см">
+    <rect x="${padL}" y="${padT}" width="${cfg.maxCm*pxPerCm}" height="${bodyH}" rx="7"
+          fill="#fbe9b0" stroke="#d9b64a" stroke-width="1.5"/>
+    ${ticks}
+    <rect x="${padL}" y="${padT-30}" width="${objEnd-padL}" height="17" rx="5"
+          fill="#8ecbec" stroke="#3d94c4" stroke-width="1.3"/>
+    <text x="${padL+2}" y="${padT-36}" font-size="12.5" fill="#3d94c4" font-weight="600">брусок</text>
+    <line x1="${objEnd}" y1="${padT-38}" x2="${objEnd}" y2="${padT+42}"
+          stroke="#d64545" stroke-width="2" stroke-dasharray="5 3"/>
+  </svg>`;
+}
+
+function renderAmmeter(cfg){
+  const cx = 170, cy = 150, R = 115;
+  const a0 = 155, a1 = 25;
+  const sweep = a0 - a1;
+
+  const P = (ang, r) => [
+    cx + r * Math.cos(ang * Math.PI / 180),
+    cy - r * Math.sin(ang * Math.PI / 180)
+  ];
+  const angOf = v => a0 - (v / cfg.max) * sweep;
+
+  const [sx, sy] = P(a0, R);
+  const [ex, ey] = P(a1, R);
+
+  let ticks = '';
+  const n = cfg.max * cfg.subdivisionsPerUnit;
+  for (let i = 0; i <= n; i++){
+    const v = i / cfg.subdivisionsPerUnit;
+    const ang = angOf(v);
+    const isMajor = i % cfg.subdivisionsPerUnit === 0;
+    const isMid   = i % (cfg.subdivisionsPerUnit / 2) === 0;
+    const len = isMajor ? 18 : (isMid ? 12 : 7);
+    const [x1,y1] = P(ang, R);
+    const [x2,y2] = P(ang, R - len);
+    ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}"
+                    x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"
+                    stroke="#2b6f9e" stroke-width="${isMajor ? 2 : 1}"/>`;
+    if (isMajor){
+      const [tx, ty] = P(ang, R - 36);
+      ticks += `<text x="${tx.toFixed(1)}" y="${(ty+5).toFixed(1)}" text-anchor="middle"
+                font-size="15" font-weight="700" fill="#1c5a80">${v}</text>`;
+    }
+  }
+
+  const [nx, ny] = P(angOf(cfg.reading), R - 22);
+
+  return `
+  <svg viewBox="0 0 340 300" role="img" aria-label="Шкала амперметра от 0 до ${cfg.max} А">
+    <circle cx="${cx}" cy="${cy}" r="${R+18}" fill="#f4fafe" stroke="#9cc9e4" stroke-width="2"/>
+    <path d="M ${sx.toFixed(1)} ${sy.toFixed(1)} A ${R} ${R} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}"
+          fill="none" stroke="#2b6f9e" stroke-width="2"/>
+    ${ticks}
+    <line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}"
+          stroke="#d64545" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="7.5" fill="#d64545"/>
+    <text x="${cx}" y="${cy+42}" text-anchor="middle" font-size="17"
+          font-weight="800" fill="#1c5a80">А</text>
+  </svg>`;
+}
+
+function renderMensura(cfg){
+  const y0 = 280, y100 = 60;
+  const k = (y0 - y100) / 100;
+  const yOf = v => y0 - v * k;
+
+  let ticks = '', labels = '';
+  for (let v = 0; v <= 100; v += 5){
+    const y = yOf(v);
+    const isMajor = v % 20 === 0;
+    const len = isMajor ? 20 : 10;
+    ticks += `<line x1="${145}" y1="${y.toFixed(1)}" x2="${145-len}" y2="${y.toFixed(1)}"
+              stroke="#2b6f9e" stroke-width="${isMajor ? 1.8 : 1}"/>`;
+    if (isMajor){
+      labels += `<text x="150" y="${(y+4.5).toFixed(1)}" font-size="13"
+                 font-weight="600" fill="#1c5a80">${v}</text>`;
+    }
+  }
+
+  const level = yOf(cfg.reading);
+
+  return `
+  <svg viewBox="0 0 230 330" role="img" aria-label="Мензурка от 0 до 100 мл">
+    <rect x="55" y="45" width="90" height="245" rx="8" fill="#f6fcff" stroke="#9cc9e4" stroke-width="2"/>
+    <rect x="59" y="${level.toFixed(1)}" width="82" height="${(278-level).toFixed(1)}"
+          rx="4" fill="#8fd3f0" opacity="0.75"/>
+    <rect x="55" y="45" width="90" height="245" rx="8" fill="none" stroke="#5aa8d0" stroke-width="2.4"/>
+    <line x1="59" y1="${level.toFixed(1)}" x2="141" y2="${level.toFixed(1)}"
+          stroke="#2b7cb8" stroke-width="2"/>
+    ${ticks}
+    ${labels}
+    <text x="100" y="315" text-anchor="middle" font-size="13" font-weight="700" fill="#5a7d92">мл</text>
+  </svg>`;
+}
+
+function renderThermo(cfg){
+  const yTop = 50, yBot = 290;
+  const k = (yBot - yTop) / 50;
+  const yOf = v => yBot - (v + 10) * k;
+
+  let ticks = '', labels = '';
+  for (let v = -10; v <= 40; v += 1){
+    const y = yOf(v);
+    const isMajor = v % 10 === 0;
+    const isMid = v % 5 === 0;
+    const len = isMajor ? 18 : (isMid ? 12 : 7);
+    ticks += `<line x1="100" y1="${y.toFixed(1)}" x2="${100+len}" y2="${y.toFixed(1)}"
+              stroke="#2b6f9e" stroke-width="${isMajor ? 1.8 : 1}"/>`;
+    if (isMajor){
+      labels += `<text x="${100+len+5}" y="${(y+4.5).toFixed(1)}" font-size="12.5"
+                 font-weight="600" fill="#1c5a80">${v}</text>`;
+    }
+  }
+
+  const level = yOf(cfg.reading);
+
+  return `
+  <svg viewBox="0 0 200 360" role="img" aria-label="Термометр от −10 до +40 градусов">
+    <rect x="72" y="35" width="30" height="270" rx="15" fill="#f6fcff" stroke="#9cc9e4" stroke-width="2"/>
+    <circle cx="87" cy="318" r="24" fill="#f6fcff" stroke="#9cc9e4" stroke-width="2"/>
+    <circle cx="87" cy="318" r="15" fill="#e2585a"/>
+    <rect x="81" y="${level.toFixed(1)}" width="12" height="${(318-level).toFixed(1)}" fill="#e2585a"/>
+    <circle cx="87" cy="318" r="15" fill="#e2585a"/>
+    <rect x="72" y="35" width="30" height="270" rx="15" fill="none" stroke="#5aa8d0" stroke-width="2.2"/>
+    ${ticks}
+    ${labels}
+  </svg>`;
+}
+
+function renderScales(cfg){
+  const display = String(cfg.reading).replace('.', ',');
+  return `
+  <svg viewBox="0 0 240 210" role="img" aria-label="Электронные весы с показанием ${display} грамма">
+    <rect x="20" y="70" width="200" height="100" rx="16" fill="#eaf5fc" stroke="#9cc9e4" stroke-width="2"/>
+    <rect x="48" y="98" width="144" height="46" rx="9" fill="#10312a" stroke="#0a211c" stroke-width="1.5"/>
+    <text x="120" y="130" text-anchor="middle" font-size="24"
+          font-family="Consolas,monospace" font-weight="700" fill="#5df2a8">${display} г</text>
+    <rect x="34" y="165" width="172" height="11" rx="5.5" fill="#bcd9ec"/>
+    <text x="120" y="58" text-anchor="middle" font-size="13" font-weight="600" fill="#5a7d92">
+      электронные весы
+    </text>
+  </svg>`;
+}
+
+/* ============================================================
+   5. ПОСТРОЕНИЕ РАЗМЕТКИ ЗАДАНИЙ
+   ============================================================ */
+
+document.getElementById('fig-ruler').innerHTML   = renderRuler(CONFIG.task1.ruler);
+document.getElementById('fig-ammeter').innerHTML = renderAmmeter(CONFIG.task1.ammeter);
+
+/* --- Задание 2 --- */
+(function buildTask2(){
+  const rows = CONFIG.task2.rows;
+  document.getElementById('t2-body').innerHTML = rows.map((r, i) => `
+    <tr>
+      <td>${r.name} (${r.symbol})</td>
+      <td>${String(r.value).replace('.', ',')} ${r.unit}</td>
+      <td>${String(r.absErr).replace('.', ',')} ${r.unit}</td>
+      <td>
+        <div class="input-wrap">
+          <input type="text" inputmode="decimal" class="num-input"
+                 data-key="t2_${i}" id="t2_${i}" placeholder="?">
+          <span class="unit">%</span>
+        </div>
+        <span class="msg" data-for="t2_${i}"></span>
+      </td>
+    </tr>`).join('');
+})();
+
+/* --- Задание 3 --- */
+(function buildTask3(){
+  const m = CONFIG.task3.measurements;
+  document.getElementById('t3-body').innerHTML = `
+    <tr>
+      <td><b>Длина L, ${CONFIG.task3.unit}</b></td>
+      ${m.map(v => `<td>${String(v).replace('.', ',')}</td>`).join('')}
+    </tr>`;
+})();
+
+/* --- Задание 4 --- */
+(function buildTask4(){
+  const renderers = {
+    mensura: renderMensura,
+    thermo:  renderThermo,
+    scales:  renderScales
+  };
+
+  document.getElementById('t4-devices').innerHTML = CONFIG.task4.devices.map(d => `
+    <div class="card-mini" style="margin-bottom:16px">
+      <h3>${d.title}</h3>
+      <div class="grid-2" style="align-items:center">
+        <div class="figure">${renderers[d.id](d)}</div>
+        <div>
+          <div class="field-row">
+            <label>Цена деления</label>
+            <div class="input-wrap">
+              <input type="text" inputmode="decimal" class="num-input"
+                     data-key="t4_${d.id}_div" id="t4_${d.id}_div" placeholder="?">
+              <span class="unit">${d.unit}</span>
+            </div>
+            <span class="msg" data-for="t4_${d.id}_div"></span>
+          </div>
+
+          <div class="field-row">
+            <label>Погрешность</label>
+            <div class="input-wrap">
+              <input type="text" inputmode="decimal" class="num-input"
+                     data-key="t4_${d.id}_err" id="t4_${d.id}_err" placeholder="?">
+              <span class="unit">${d.unit}</span>
+            </div>
+            <span class="msg" data-for="t4_${d.id}_err"></span>
+          </div>
+
+          <div class="field-row">
+            <label>Результат: значение измерения</label>
+            <div class="input-wrap">
+              <input type="text" inputmode="decimal" class="num-input"
+                     data-key="t4_${d.id}_val" id="t4_${d.id}_val" placeholder="?">
+              <span class="unit">${d.unit}</span>
+            </div>
+            <span class="msg" data-for="t4_${d.id}_val"></span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+})();
+
+/* --- Задание 5 --- */
+(function buildTask5(){
+  document.getElementById('t5-list').innerHTML = CONFIG.task5.statements.map((s, i) => `
+    <label class="check-row">
+      <input type="checkbox" id="t5_${i}" data-key="t5_${i}">
+      <div class="check-content">
+        <span>${i+1}. ${s.text}</span>
+        <span class="t5-hint"></span>
+      </div>
+    </label>`).join('');
+})();
+
+/* ============================================================
+   6. ПРАВИЛЬНЫЕ ОТВЕТЫ
+   ============================================================ */
+
+const CHECKS = {};
+
+/* Задание 1 */
+CHECKS.t1_ruler_div = {
+  values: [0.1], tol: 0.005,
+  hint: 'Правильный ответ: 0,1 см (1 мм). Между соседними штрихами линейки 1 мм.'
+};
+CHECKS.t1_ruler_read = {
+  values: [CONFIG.task1.ruler.readingCm], tol: 0.06,
+  hint: 'Правильный ответ: ' +
+        String(CONFIG.task1.ruler.readingCm).replace('.', ',') +
+        ' см. Правый край бруска совпадает с этой отметкой.'
+};
+CHECKS.t1_amm_div = {
+  values: [1 / CONFIG.task1.ammeter.subdivisionsPerUnit], tol: 0.005,
+  hint: 'Правильный ответ: 0,1 А. От 0 до 1 А укладывается ' +
+        CONFIG.task1.ammeter.subdivisionsPerUnit + ' делений.'
+};
+CHECKS.t1_amm_read = {
+  values: [CONFIG.task1.ammeter.reading], tol: 0.06,
+  hint: 'Правильный ответ: ' +
+        String(CONFIG.task1.ammeter.reading).replace('.', ',') +
+        ' А — это показание стрелки.'
+};
+
+/* Задание 2 */
+CONFIG.task2.rows.forEach((r, i) => {
+  const pct = r.absErr / r.value * 100;
+  CHECKS['t2_' + i] = {
+    values: [pct, pct / 100],
+    tol: 0.02,
+    hint: `Правильный ответ: ε = Δx / x · 100 % = ` +
+          `${String(r.absErr).replace('.',',')} / ` +
+          `${String(r.value).replace('.',',')} · 100 % ≈ ` +
+          `${round(pct, 2).toString().replace('.',',')} %.`
+  };
+});
+
+/* Задание 3 */
+const T3 = (function(){
+  const m = CONFIG.task3.measurements;
+  const mean = m.reduce((a, b) => a + b, 0) / m.length;
+  const range = Math.max(...m) - Math.min(...m);
+  const absErr = range / 2;
+  return { mean, range, absErr };
+})();
+
+CHECKS.t3_mean = {
+  values: [T3.mean], tol: 0.06,
+  hint: `Правильный ответ: L_ср = ${round(T3.mean, 2).toString().replace('.',',')} см. ` +
+        `Сумма всех измерений, делённая на их количество.`
+};
+CHECKS.t3_err = {
+  values: [T3.absErr], tol: 0.06,
+  hint: `Правильный ответ: ΔL = ${round(T3.absErr, 2).toString().replace('.',',')} см. ` +
+        `Размах = max − min = ${round(T3.range, 2).toString().replace('.',',')}; половина размаха.`
+};
+CHECKS.t3_res_val = {
+  values: [T3.mean], tol: 0.06,
+  hint: `Правильный ответ: ${round(T3.mean, 2).toString().replace('.',',')} см (среднее значение).`
+};
+CHECKS.t3_res_err = {
+  values: [T3.absErr], tol: 0.06,
+  hint: `Правильный ответ: ± ${round(T3.absErr, 2).toString().replace('.',',')} см (абсолютная погрешность).`
+};
+
+/* Задание 4 */
+CONFIG.task4.devices.forEach(d => {
+  CHECKS[`t4_${d.id}_div`] = {
+    values: [d.division], tol: 0.005,
+    hint: `Правильный ответ: ${String(d.division).replace('.',',')} ${d.unit}.`
+  };
+  CHECKS[`t4_${d.id}_err`] = {
+    values: [d.error], tol: 0.02,
+    hint: (d.id === 'scales')
+      ? 'Правильный ответ: 0,1 г — единица последнего разряда цифрового прибора.'
+      : `Правильный ответ: ${String(d.error).replace('.',',')} ${d.unit} — половина цены деления.`
+  };
+  CHECKS[`t4_${d.id}_val`] = {
+    values: [d.reading], tol: 0.05,
+    hint: `Правильный ответ: ${String(d.reading).replace('.',',')} ${d.unit}.`
+  };
+});
+
+/* ============================================================
+   7. ФЛАГ РАСКРЫТИЯ ОТВЕТОВ
+   ============================================================ */
+let REVEAL_ANSWERS = false;
+
+/* ============================================================
+   8. ПРОВЕРКА ОТДЕЛЬНОГО ПОЛЯ
+   ============================================================ */
+function evaluateInput(input, key){
+  const rule  = CHECKS[key];
+  const msgEl = document.querySelector(`.msg[data-for="${key}"]`);
+  if (!rule || !input) return false;
+
+  const raw = input.value;
+
+  if (raw.trim() === ''){
+    setMsg(msgEl, 'Поле не заполнено — введите число.', 'err');
+    input.classList.remove('good'); input.classList.add('bad');
+    return false;
+  }
+
+  const num = parseNum(raw);
+  if (isNaN(num)){
+    setMsg(msgEl, 'Некорректный формат. Введите число, например 3,4', 'err');
+    input.classList.remove('good'); input.classList.add('bad');
+    return false;
+  }
+
+  const ok = rule.values.some(v => nearly(num, v, rule.tol));
+  if (ok){
+    setMsg(msgEl, 'Верно!', 'ok');
+    input.classList.remove('bad'); input.classList.add('good');
+  } else {
+    const text = REVEAL_ANSWERS
+      ? (rule.hint || 'Неверно.')
+      : 'Неверно. Попробуйте ещё раз.';
+    setMsg(msgEl, text, 'err');
+    input.classList.remove('good'); input.classList.add('bad');
+  }
+  return ok;
+}
+
+function checkKeys(keys){
+  let correct = 0;
+  keys.forEach(k => {
+    const input = document.querySelector(`[data-key="${k}"]`);
+    const ok = evaluateInput(input, k);
+    STATE.results[k] = ok;
+    if (ok) correct++;
+  });
+  return correct;
+}
+
+/* ============================================================
+   9. СОСТОЯНИЕ И ЗАДАНИЯ
+   ============================================================ */
+const STATE = { results: {} };
+
+const TASK_DEFS = {
+  t1: {
+    name: 'Задание 1',
+    max: CONFIG.maxPoints.t1,
+    items: ['t1_ruler_div','t1_ruler_read','t1_amm_div','t1_amm_read']
+  },
+  t2: {
+    name: 'Задание 2',
+    max: CONFIG.maxPoints.t2,
+    items: CONFIG.task2.rows.map((_, i) => 't2_' + i)
+  },
+  t3: {
+    name: 'Задание 3',
+    max: CONFIG.maxPoints.t3,
+    items: ['t3_mean','t3_err','t3_result']
+  },
+  t4: {
+    name: 'Задание 4',
+    max: CONFIG.maxPoints.t4,
+    items: CONFIG.task4.devices.flatMap(d =>
+      [`t4_${d.id}_div`, `t4_${d.id}_err`, `t4_${d.id}_val`])
+  },
+  t5: {
+    name: 'Задание 5',
+    max: CONFIG.maxPoints.t5,
+    items: CONFIG.task5.statements.map((_, i) => 't5_' + i)
+  }
+};
+
+/* ---------- Проверки по заданиям ---------- */
+function checkTask1(){
+  const keys = TASK_DEFS.t1.items;
+  const correct = checkKeys(keys);
+  const pct = Math.round(correct / keys.length * 100);
+  const el = document.getElementById('result-task1');
+  el.textContent = `Правильно: ${correct} из ${keys.length} (${pct} %)`;
+  el.className = 'task-result ' + (correct === keys.length ? 'ok' : (correct === 0 ? 'err' : ''));
+}
+
+function checkTask2(){
+  const keys = TASK_DEFS.t2.items;
+  const correct = checkKeys(keys);
+  const pct = Math.round(correct / keys.length * 100);
+  const el = document.getElementById('result-task2');
+  el.textContent = `Правильно: ${correct} из ${keys.length} (${pct} %)`;
+  el.className = 'task-result ' + (correct === keys.length ? 'ok' : (correct === 0 ? 'err' : ''));
+}
+
+function checkTask3(){
+  const okMean = checkKeys(['t3_mean']) === 1;
+  const okErr  = checkKeys(['t3_err']) === 1;
+  const okVal  = checkKeys(['t3_res_val']) === 1;
+  const okRes  = checkKeys(['t3_res_err']) === 1;
+  STATE.results['t3_result'] = okVal && okRes;
+
+  const total = (okMean ? 1 : 0) + (okErr ? 1 : 0) + (STATE.results['t3_result'] ? 1 : 0);
+  const el = document.getElementById('result-task3');
+  el.textContent = `Правильно: ${total} из 3`;
+  el.className = 'task-result ' + (total === 3 ? 'ok' : (total === 0 ? 'err' : ''));
+}
+
+function checkTask4(){
+  const keys = TASK_DEFS.t4.items;
+  const correct = checkKeys(keys);
+  const pct = Math.round(correct / keys.length * 100);
+  const el = document.getElementById('result-task4');
+  el.textContent = `Правильно: ${correct} из ${keys.length} (${pct} %)`;
+  el.className = 'task-result ' + (correct === keys.length ? 'ok' : (correct === 0 ? 'err' : ''));
+}
+
+function checkTask5(){
+  let correct = 0;
+  CONFIG.task5.statements.forEach((s, i) => {
+    const cb = document.getElementById(`t5_${i}`);
+    const ok = (cb.checked === s.correct);
+    STATE.results[`t5_${i}`] = ok;
+    if (ok) correct++;
+
+    cb.parentElement.style.borderColor = ok ? 'var(--ok)' : 'var(--err)';
+    cb.parentElement.style.background = ok ? '#f1fbf5' : '#fdf3f3';
+
+    const hintEl = cb.parentElement.querySelector('.t5-hint');
+    if (REVEAL_ANSWERS){
+      hintEl.textContent = s.correct
+        ? '✓ Это верное утверждение'
+        : '✗ Это неверное утверждение';
+      hintEl.style.color = s.correct ? 'var(--ok)' : 'var(--err)';
+    } else {
+      hintEl.textContent = '';
+    }
+  });
+
+  const el = document.getElementById('result-task5');
+  el.textContent = `Правильно: ${correct} из ${CONFIG.task5.statements.length}`;
+  el.className = 'task-result ' +
+    (correct === CONFIG.task5.statements.length ? 'ok' : (correct === 0 ? 'err' : ''));
+}
+
+/* ---------- Раскрытие всех правильных ответов ---------- */
+function revealAllAnswers(){
+  REVEAL_ANSWERS = true;
+  checkTask1();
+  checkTask2();
+  checkTask3();
+  checkTask4();
+  checkTask5();
+}
+
+/* ============================================================
+   10. КНОПКИ «ПРОВЕРИТЬ»
+   ============================================================ */
+document.getElementById('check-task1').addEventListener('click', checkTask1);
+document.getElementById('check-task2').addEventListener('click', checkTask2);
+document.getElementById('check-task4').addEventListener('click', checkTask4);
+document.getElementById('check-task5').addEventListener('click', checkTask5);
+
+/* ---------- Кнопки «Рассчитать» в задании 3 ---------- */
+document.querySelectorAll('[data-calc]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.calc;
+    if (target === 't3_result'){
+      checkKeys(['t3_res_val']);
+      checkKeys(['t3_res_err']);
+      STATE.results['t3_result'] =
+        STATE.results['t3_res_val'] && STATE.results['t3_res_err'];
+      const el = document.getElementById('result-task3');
+      el.textContent = STATE.results['t3_result']
+        ? 'Результат записан верно.'
+        : 'Проверьте запись результата.';
+      el.className = 'task-result ' + (STATE.results['t3_result'] ? 'ok' : 'err');
+    } else {
+      checkKeys([target]);
+      const ok = STATE.results[target];
+      const el = document.getElementById('result-task3');
+      el.textContent = ok ? 'Верно!' : 'Пока неверно — попробуйте ещё.';
+      el.className = 'task-result ' + (ok ? 'ok' : 'err');
+    }
+  });
+});
+
+/* ============================================================
+   11. ПОДСЧЁТ БАЛЛОВ
+   ============================================================ */
+function computeScore(){
+  let total = 0;
+  const details = [];
+
+  for (const id in TASK_DEFS){
+    const def = TASK_DEFS[id];
+    let correct = 0;
+    def.items.forEach(k => { if (STATE.results[k]) correct++; });
+    const pts = def.max * (correct / def.items.length);
+    total += pts;
+    details.push({
+      name: def.name,
+      correct: correct,
+      total: def.items.length,
+      pts: pts,
+      max: def.max
+    });
+  }
+  return { total, details };
+}
+
+function gradeFor(score){
+  if (score >= 17) return { mark: 5, text: 'Отлично! Вы хорошо разобрались в теме измерения физических величин и погрешностей.' };
+  if (score >= 13) return { mark: 4, text: 'Хорошо! Есть небольшие неточности — повторите правила определения цены деления и записи результата.' };
+  if (score >= 9)  return { mark: 3, text: 'Удовлетворительно. Стоит ещё раз разобрать вычисление абсолютной и относительной погрешности.' };
+  return { mark: 2, text: 'Есть ошибки — повторите правила определения цены деления и вычисления погрешностей.' };
+}
+
+/* ============================================================
+   12. ЗАВЕРШЕНИЕ РАБОТЫ
+   ============================================================ */
+function finish(){
+  const used = getAttempts();
+
+  if (used >= CONFIG.maxAttempts){
+    alert('Вы уже использовали все попытки (' + CONFIG.maxAttempts + ').');
+    return;
+  }
+
+  /* 1. Проверяем все задания */
+  checkTask1();
+  checkTask2();
+  checkTask3();
+  checkTask4();
+  checkTask5();
+
+  /* 2. Раскрываем правильные ответы — они видны только сейчас */
+  revealAllAnswers();
+
+  /* 3. Считаем балл */
+  const { total, details } = computeScore();
+  const g = gradeFor(total);
+  const name = document.getElementById('studentName').value.trim();
+
+  /* 4. Увеличиваем счётчик попыток */
+  const nowUsed = used + 1;
+  setAttempts(nowUsed);
+  setLastScore(total.toFixed(1));
+  updateAttemptInfo();
+
+  /* 5. Показываем результат */
+  const box = document.getElementById('finalResult');
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    ${name ? `<p style="margin:0 0 10px;font-weight:700;color:var(--accent-dark)">Работа: ${name}</p>` : ''}
+    <div class="final-score">
+      <div class="score-num">${total.toFixed(1)}<span> / 20 баллов</span></div>
+      <div class="score-mark">Оценка: <b>${g.mark}</b></div>
+    </div>
+    <p class="feedback">${g.text}</p>
+    <ul class="breakdown">
+      ${details.map(d => `
+        <li>
+          <span>${d.name}</span>
+          <span>${d.correct} из ${d.total} · ${d.pts.toFixed(1)} из ${d.max} б.</span>
+        </li>`).join('')}
+    </ul>
+    <div class="reveal-note">
+      ✓ Правильные ответы и подсказки раскрыты под каждым заданием. Проверьте свои решения!
+    </div>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.getElementById('finishBtn').addEventListener('click', finish);
+
+/* ============================================================
+   13. СБРОС ОТВЕТОВ
+   ============================================================ */
+function resetAll(){
+  const used = getAttempts();
+  let msg = 'Сбросить все ответы и начать заново?';
+  if (used > 0){
+    msg += `\nИспользовано попыток: ${used} из ${CONFIG.maxAttempts}.`;
+    if (used >= CONFIG.maxAttempts){
+      msg += '\nВнимание: лимит попыток исчерпан, завершить работу заново не получится.';
+    }
+  }
+  if (!confirm(msg)) return;
+
+  /* Поля ввода */
+  document.querySelectorAll('.num-input, .text-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('good', 'bad');
+  });
+
+  /* Сообщения */
+  document.querySelectorAll('.msg').forEach(m => {
+    m.textContent = '';
+    m.className = 'msg';
+  });
+
+  /* Чекбоксы и подсказки */
+  document.querySelectorAll('#t5-list input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    cb.parentElement.style.borderColor = '';
+    cb.parentElement.style.background = '';
+  });
+  document.querySelectorAll('.t5-hint').forEach(h => h.textContent = '');
+
+  /* Результаты заданий */
+  document.querySelectorAll('.task-result').forEach(el => {
+    el.textContent = '';
+    el.className = 'task-result';
+  });
+
+  /* Рефлексия и итоги */
+  document.getElementById('reflectText').value = '';
+  document.getElementById('selfMark').value = '';
+  const box = document.getElementById('finalResult');
+  box.classList.add('hidden');
+  box.innerHTML = '';
+
+  /* Состояние */
+  STATE.results = {};
+  REVEAL_ANSWERS = false;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+/* ============================================================
+   14. УЧИТЕЛЬСКИЙ СБРОС СЧЁТЧИКА ПОПЫТОК
+   ============================================================ */
+document.getElementById('teacherReset').addEventListener('click', () => {
+  if (!confirm('Сбросить счётчик попыток и сохранённый результат?\nЭто действие предназначено для учителя.')) return;
+  storageRemove(ATTEMPT_KEY);
+  storageRemove(SCORE_KEY);
+  REVEAL_ANSWERS = false;
+  updateAttemptInfo();
+  alert('Счётчик попыток сброшен. Ученик может пройти работу заново.');
+});
+
+/* ============================================================
+   15. ПОДСКАЗКА: очистка сообщения при вводе
+   ============================================================ */
+document.addEventListener('input', e => {
+  if (!e.target.classList.contains('num-input')) return;
+  const key = e.target.dataset.key;
+  const msgEl = document.querySelector(`.msg[data-for="${key}"]`);
+  if (msgEl) setMsg(msgEl, '', '');
+  e.target.classList.remove('good', 'bad');
+});
+
+/* ============================================================
+   16. ИНИЦИАЛИЗАЦИЯ
+   ============================================================ */
+(function init(){
+  /* Обновляем информацию о попытках */
+  updateAttemptInfo();
+
+  /* Если попытки исчерпаны и есть прошлый балл — показываем его */
+  if (getAttempts() >= CONFIG.maxAttempts){
+    const last = getLastScore();
+    const box = document.getElementById('finalResult');
+    if (last !== null && !isNaN(last)){
+      const g = gradeFor(last);
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <p style="margin:0 0 10px;font-weight:700;color:var(--accent-dark)">
+          Работа уже завершена. Все попытки использованы.
+        </p>
+        <div class="final-score">
+          <div class="score-num">${last.toFixed(1)}<span> / 20 баллов</span></div>
+          <div class="score-mark">Оценка: <b>${g.mark}</b></div>
+        </div>
+        <p class="feedback">${g.text}</p>
+        <div class="reveal-note">
+          Правильные ответы были показаны после завершения работы.
+          Для сброса счётчика используйте кнопку «Сбросить счётчик попыток» внизу страницы.
+        </div>
+      `;
+    }
+  }
+})();
+</script>
+</body>
+</html>
